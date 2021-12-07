@@ -1,0 +1,11 @@
+var userId = document.getElementById('userId').value;
+
+<script>console.log("This is an alrt")</script<script><script>var userId = document.getElementById('userId').value;console.log(userId)</script></script>
+
+$IPAddress = $_SERVER['REMOTE_ADDR’];
+$userAgent = $_SERVER['HTTP_USER_AGENT’];
+session_start();
+$session_ID = session_id();
+session_regenerate_id();
+$NumVal = $_SESSION['numberValue’];
+$_SESSION['numberValue'] = $NumVal ;
