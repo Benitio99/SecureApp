@@ -1,0 +1,13 @@
+
+Attached Files:
+
+    File header.php (49 B)
+    File Time.php (880 B) 
+
+The attached code has a delay “time_nanosleep(0,500000000);” introduced to simulate processing and has introduced a vulnerability allowing an end-user to bruit force the password by analysing the web applications response time to various inputs.
+Objective:
+
+    To determine the Password without looking at the code.
+    Rewrite the code to mitigate against this side channel attack. Your code solution should have the same processing time irrespective of the password provided by the end user.
+    Use your notes/slides “09 Side Channel Vulnerability” for a potential solution.
+

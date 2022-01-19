@@ -1,0 +1,8 @@
+
+Setup a Database called "acc" SQL to create and populate table is contained in acc.sql
+The code in this lab suffers from a CSRF vulnerability.
+
+    Your objective is to validate the existence of the CSRF vulnerability.
+    Once the vulnerability has been identified, mitigate this vulnerability via the use of a hidden field containing a CSRF token
+    Demo your functioning solution to your lecturer
+
