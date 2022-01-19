@@ -30,7 +30,7 @@ Example of not escaping quotes. filter had removed script tags once but didn't c
 
 fix:        
 
-9 check for quote characters and escap appropriately
+9 check for quote characters and escape appropriately
 
 show error: ?number=1===1){alert("caution")}</script><script>if(1
 variable passed is being used as a boundary in a if else or switch statement. this can be exploited as the variable is being passed as text and can insert new pieces of <script>

@@ -68,10 +68,6 @@ $CookieString = $_COOKIE["TestCookie"];
 		echo "Incorrect cookie Value ";
 	}
 
-
-
-
-
 function GetToBalance($ToAccount,$TransferValue, $conn) {
 	
 	$ToBalance=0;
@@ -87,7 +83,6 @@ function GetToBalance($ToAccount,$TransferValue, $conn) {
 		$ToBalance = $row["value"];
 		$ToBalance = $ToBalance + $TransferValue;
 
-		
 	}else {
 	  echo "0 results";
 	}
