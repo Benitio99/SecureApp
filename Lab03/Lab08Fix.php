@@ -56,7 +56,7 @@
 <body>
 
 <div class="header">
-  <h1>XSS Challenge 03 (Get a script tag to run on this page)</h1>
+  <h1>XSS Challenge 08 (Get a script tag to run on this page)</h1>
 </div>
 
 <div class="clearfix">
@@ -79,9 +79,10 @@
   </div>
 
   <div class="column content">
-    <h1>Reflective XSS Over HTTP GET Request</h1>
+    <h1>Reflective XSS Over HTTP POST Request</h1>
     <p>Reflective XSS arises when a web application receives data in a HTTP request. </p>
 	<p>The web application then and includes that data within the response of the page returned by the web server in an unsafe manner resulting in unintentional code being included and execuited by the browser.</p>
+	<p>Note: You will have to break out of the input field of the input box to perform XSS here.
 
 	
 
@@ -89,30 +90,29 @@
   </div> 
   
   <div class="column content">
+  
+   <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+  Your name:<input type="text" name="TX_name" />
+  <input type="submit" name="submit"/>
+  
+  <!-- Hummm.... So your back looking at the code AGAIN...  -->
+  
   <?php
-
-	try {
-		
-		if (empty($_GET["name"])) {
-			echo '<BR> Pass your payload to a parameter called name on the URL (HTTP GET request) ';
-			echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?name=12345 </p>';			
+    function sanitise($name){
+      $badChars = ["<", ">", ";", "/", "{", "}", "[", "]", '"'];
+      for ($i = 0; $i < strlen($name); $i++){
+        $currentLetter = substr($name, $i, 1);
+        if (in_array($currentLetter, $badChars)){
+          $name = str_replace($currentLetter, "&#0".strval(ord($currentLetter)), $name);
+        }
+      }
+      return $name;
+    }
+		if (isset($_POST["TX_name"])) {
+		$name =  $_POST["TX_name"];	
+    $name = sanitise($name);
+		echo "<br><br><br>Your Returned Name:<input type=\"text\" name=\"RX_name\" value=\"$name\">";
 		}
-		else {
-			echo '<BR>';
-			$name =  $_GET["name"];
-			$name = preg_replace("/<script>/i","", $name);
-			$name = preg_replace("/<\/script>/i","", $name);
-      
-			echo $name;
-		}
-		
-	} catch(Exception $e) {
-		
-		echo '<BR> Pass your payload to a parameter called name on the URL (HTTP GET request) ';
-		echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?name=12345 </p>';		
-		
-	}
-
 	?>
 	</div>
 	

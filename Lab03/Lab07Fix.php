@@ -56,7 +56,7 @@
 <body>
 
 <div class="header">
-  <h1>XSS Challenge 03 (Get a script tag to run on this page)</h1>
+  <h1>XSS Challenge 07 (Perform DOM based XSS on this page.  Note: The XSS payload is not sent to the server.) Wow I didn't know you could do that....</h1>
 </div>
 
 <div class="clearfix">
@@ -79,9 +79,10 @@
   </div>
 
   <div class="column content">
-    <h1>Reflective XSS Over HTTP GET Request</h1>
-    <p>Reflective XSS arises when a web application receives data in a HTTP request. </p>
-	<p>The web application then and includes that data within the response of the page returned by the web server in an unsafe manner resulting in unintentional code being included and execuited by the browser.</p>
+    <h1>DOM XSS Over HTTP GET Request</h1>
+    <p>All XSS on this page is on the client browser only </p>
+	<p>Note the XSS payload is not sent to the server. View this via the ZAP proxy.</p>
+	<p>http://localhost/lab/Lab07.php?x=1#123</p>
 
 	
 
@@ -89,31 +90,29 @@
   </div> 
   
   <div class="column content">
-  <?php
-
-	try {
-		
-		if (empty($_GET["name"])) {
-			echo '<BR> Pass your payload to a parameter called name on the URL (HTTP GET request) ';
-			echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?name=12345 </p>';			
-		}
-		else {
-			echo '<BR>';
-			$name =  $_GET["name"];
-			$name = preg_replace("/<script>/i","", $name);
-			$name = preg_replace("/<\/script>/i","", $name);
-      
-			echo $name;
-		}
-		
-	} catch(Exception $e) {
-		
-		echo '<BR> Pass your payload to a parameter called name on the URL (HTTP GET request) ';
-		echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?name=12345 </p>';		
-		
-	}
-
-	?>
+  
+	<!-- But But But.... I don't see any php. Well that's just amazing.  -->
+	
+	<script>
+    function sanitise(name){
+      let badChars = ["<", ">", ";", "/", "{", "}", "[", "]", '"'];
+      for (let i = 0; i < name.length; i++){
+        let currentLetter = name.charAt(i);
+        if (badChars.includes(currentLetter)){
+          name = name.replace(currentLetter, "&#x" + name.charCodeAt(currentLetter) + ";");
+          console.log("&#x" + name.charCodeAt(currentLetter));
+        }
+      }
+      console.log(name);
+      return name;
+    }
+    var hashvalue = location.hash.substring(1);
+    hashvalue = sanitise(hashvalue);
+    document.write("original value: " + hashvalue);
+    document.write("<br>");
+    document.write("decodeurl: " + decodeURI(hashvalue));
+	</script>
+	
 	</div>
 	
 </div>

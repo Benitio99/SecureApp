@@ -94,10 +94,10 @@
 	<!-- But But But.... I don't see any php. Well that's just amazing.  -->
 	
 	<script>
-	var hashvalue = location.hash.substring(1);
-	document.write(hashvalue);
-	document.write("<br>");
-	document.write(decodeURI(hashvalue));
+    var hashvalue = location.hash.substring(1);
+    document.write("original value: " + hashvalue);
+    document.write("<br>");
+    document.write("decodeurl: " + decodeURI(hashvalue));
 	</script>
 	
 	</div>

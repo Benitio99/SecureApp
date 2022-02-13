@@ -56,7 +56,7 @@
 <body>
 
 <div class="header">
-  <h1>XSS Challenge 03 (Get a script tag to run on this page)</h1>
+  <h1>XSS Challenge 09 Hint:It's on the number parameter in the HTTP GET request</h1>
 </div>
 
 <div class="clearfix">
@@ -82,6 +82,7 @@
     <h1>Reflective XSS Over HTTP GET Request</h1>
     <p>Reflective XSS arises when a web application receives data in a HTTP request. </p>
 	<p>The web application then and includes that data within the response of the page returned by the web server in an unsafe manner resulting in unintentional code being included and execuited by the browser.</p>
+	<p><b>This is an unusual one but you will see this form of XSS from time to time..
 
 	
 
@@ -90,26 +91,41 @@
   
   <div class="column content">
   <?php
-
+  function sanitise($number){
+    $badChars = ["<", ">", ";", "/", "{", "}", "[", "]", '"', "="];
+    for ($i = 0; $i < strlen($number); $i++){
+      $currentLetter = substr($number, $i, 1);
+      if (in_array($currentLetter, $badChars)){
+        $number = str_replace($currentLetter, "&#0".strval(ord($currentLetter)), $number);
+      }
+    }
+    return $number;
+  }
 	try {
 		
-		if (empty($_GET["name"])) {
-			echo '<BR> Pass your payload to a parameter called name on the URL (HTTP GET request) ';
-			echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?name=12345 </p>';			
+		if (empty($_GET["number"])) {
+			echo '<BR> Pass your payload to a parameter called number on the URL (HTTP GET request) ';
+			echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?number=9999 </p>';			
 		}
 		else {
+				
 			echo '<BR>';
-			$name =  $_GET["name"];
-			$name = preg_replace("/<script>/i","", $name);
-			$name = preg_replace("/<\/script>/i","", $name);
-      
-			echo $name;
+			
+			$number =  $_GET["number"];
+      $number = sanitise($number);
+			echo "<script>";
+			echo"if($number < 10) {";
+			echo "document.write('Hello World!');";
+			echo "}";
+			echo "</script>";
+
+			
 		}
 		
 	} catch(Exception $e) {
 		
-		echo '<BR> Pass your payload to a parameter called name on the URL (HTTP GET request) ';
-		echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?name=12345 </p>';		
+		echo '<BR> Pass your payload to a parameter called number on the URL (HTTP GET request) ';
+		echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?number=12345 </p>';		
 		
 	}
 
@@ -117,7 +133,11 @@
 	</div>
 	
 </div>
-
+<script>
+  if(1===1){alert()}</script><script>if(1 < 10) {
+	  document.write('Hello World!');
+	}
+</script>
 <div class="footer">
   <p>Break me first then try fix me....</p>
 </div>

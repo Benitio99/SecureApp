@@ -56,13 +56,13 @@
 <body>
 
 <div class="header">
-  <h1>XSS Challenge 03 (Get a script tag to run on this page)</h1>
+  <h1>XSS Challenge 02 (Get a script tag to run on this page)</h1>
 </div>
 
 <div class="clearfix">
   <div class="column menu">
     <ul>
-	  <li><a href="../index.php">Main Menu</a></li>
+      <li><a href="../index.php">Main Menu</a></li>
       <li><a href="lab01.php">Challenge 1</a></li>
       <li><a href="lab02.php">Challenge 2</a></li>
       <li><a href="lab03.php">Challenge 3</a></li>
@@ -90,7 +90,16 @@
   
   <div class="column content">
   <?php
-
+function sanitise($name){
+  $badChars = ["<", ">", ";", "/", "{", "}", "[", "]", '"'];
+  for ($i = 0; $i < strlen($name); $i++){
+    $currentLetter = substr($name, $i, 1);
+    if (in_array($currentLetter, $badChars)){
+      $name = str_replace($currentLetter, "&#0".strval(ord($currentLetter)), $name);
+    }
+  }
+  return $name;
+}
 	try {
 		
 		if (empty($_GET["name"])) {
@@ -99,10 +108,12 @@
 		}
 		else {
 			echo '<BR>';
-			$name =  $_GET["name"];
-			$name = preg_replace("/<script>/i","", $name);
-			$name = preg_replace("/<\/script>/i","", $name);
-      
+			$name = $_GET["name"];
+			
+      $name = sanitise($name);
+			//$name = preg_replace("/<script>/","", $name);
+			//$name = preg_replace("/<\/script>/","", $name);
+			
 			echo $name;
 		}
 		

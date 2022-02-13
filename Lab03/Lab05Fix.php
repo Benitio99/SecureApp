@@ -56,7 +56,7 @@
 <body>
 
 <div class="header">
-  <h1>XSS Challenge 03 (Get a script tag to run on this page)</h1>
+  <h1>XSS Challenge 05 (Get an alert / prompt box to run on this page)</h1>
 </div>
 
 <div class="clearfix">
@@ -90,7 +90,16 @@
   
   <div class="column content">
   <?php
-
+function sanitise($name){
+  $badChars = ["<", ">", ";", "/", "{", "}", "[", "]", '"'];
+  for ($i = 0; $i < strlen($name); $i++){
+    $currentLetter = substr($name, $i, 1);
+    if (in_array($currentLetter, $badChars)){
+      $name = str_replace($currentLetter, "&#0".strval(ord($currentLetter)), $name);
+    }
+  }
+  return $name;
+}
 	try {
 		
 		if (empty($_GET["name"])) {
@@ -98,12 +107,15 @@
 			echo '<BR><p><b>Example:</b>    http://localhost/XSSLabs/lab1.php?name=12345 </p>';			
 		}
 		else {
+				
 			echo '<BR>';
-			$name =  $_GET["name"];
-			$name = preg_replace("/<script>/i","", $name);
-			$name = preg_replace("/<\/script>/i","", $name);
-      
-			echo $name;
+			
+			if (preg_match('/alert/', sanitise($_GET["name"]))) {
+			  echo "error on alert";
+			}
+			else {
+			  echo sanitise($_GET["name"]);
+			}
 		}
 		
 	} catch(Exception $e) {

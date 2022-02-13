@@ -90,7 +90,16 @@
   
   <div class="column content">
   <?php
-
+  function sanitise($name){
+    $badChars = ["<", ">", ";", "/", "{", "}", "[", "]", '"'];
+    for ($i = 0; $i < strlen($name); $i++){
+      $currentLetter = substr($name, $i, 1);
+      if (in_array($currentLetter, $badChars)){
+        $name = str_replace($currentLetter, "&#0".strval(ord($currentLetter)), $name);
+      }
+    }
+    return $name;
+  }
 	try {
 		
 		if (empty($_GET["name"])) {
@@ -100,8 +109,9 @@
 		else {
 			echo '<BR>';
 			$name =  $_GET["name"];
-			$name = preg_replace("/<script>/i","", $name);
-			$name = preg_replace("/<\/script>/i","", $name);
+      $name = sanitise($name);
+			//$name = preg_replace("/<script>/i","", $name);
+			//$name = preg_replace("/<\/script>/i","", $name);
       
 			echo $name;
 		}

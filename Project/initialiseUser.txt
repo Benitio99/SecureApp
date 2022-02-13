@@ -1,0 +1,2 @@
+CREATE USER 'SADUSER'@'localhost' IDENTIFIED BY 'SADUSER';
+exit
