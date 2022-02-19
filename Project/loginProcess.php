@@ -1,6 +1,10 @@
 <?php
 
 require("server.php");
+session_start();
+
+#if (!isset($_SESSION['user_id']) && !isset($_SESSION['user_email'])) {
+    
 #CREATE USER 'SADUSER'@'localhost' IDENTIFIED BY 'SADUSER';
 /*
 function prepareInsertStatement($connection, $statement, array $arguments) {

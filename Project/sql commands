@@ -1,8 +1,7 @@
 mysql -u root
 
 CREATE USER IF NOT EXISTS 'SADUSER'@'localhost' IDENTIFIED BY 'SADUSER';
-
-GRANT ALL PRIVILEGES ON access TO 'SADUSER'@'localhost' ;
+GRANT ALL ON access.* TO 'SADUSER'@'localhost' ;
 FLUSH PRIVILEGES;
 
 exit
@@ -15,9 +14,12 @@ CREATE DATABASE IF NOT EXISTS access;
 USE access;
 CREATE TABLE IF NOT EXISTS `users` (
     `userId` INT(10) UNSIGNED ZEROFILL AUTO_INCREMENT NOT NULL,
+    `username` VARCHAR(20) NOT NULL,
+    `admin?` BOOLEAN NOT NULL DEFAULT FALSE,
     `firstName` VARCHAR(20) NOT NULL,
     `surname` VARCHAR(20) NOT NULL,
     `email` VARCHAR(30) NOT NULL,
+    `password` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`userId`),
     UNIQUE (`email`)
 )
