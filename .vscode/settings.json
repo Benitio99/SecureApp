@@ -1,0 +1,8 @@
+{
+    "python.testing.pytestArgs": [
+        "Project"
+    ],
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestEnabled": true,
+    "javascript.testing.mochaEnabled": true
+}
