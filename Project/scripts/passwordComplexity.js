@@ -1,12 +1,11 @@
 
 let passwordLength, alphaUpper, alphaLower, numeric, specialChars, noWords, okPassword, passwordMatch, submitButton;
 let checks, goodChars;
-let firstPassword, secondPassword; 
+let firstPassword, secondPassword;
 const CHECKSGOOD = 7;
 const PASSWORDLENGTH = 8;
 
-
-function setAttributes(){
+function setAttributes() {
     passwordLength = document.getElementById("passwordLength");
     alphaUpper = document.getElementById("alphabetUpper");
     alphaLower = document.getElementById("alphabetLower");
@@ -24,59 +23,59 @@ function disableInput(element) {
 function enableInput(element) {
     element.removeAttribute("disabled");
 }
-function setValueToTrue(element){
+function setValueToTrue(element) {
     enableInput(element);
     element.setAttribute("checked", "true");
     disableInput(element);
 }
-function setValueToFalse(element){
+function setValueToFalse(element) {
     enableInput(element);
     element.removeAttribute("checked");
     disableInput(element);
 }
-function checkPasswordComplexity(password){
+function checkPasswordComplexity(password) {
     firstPassword = password;
     setAttributes();
     goodChars = 0;
     console.log("checking pass complexity");
     checks = 0;
 
-    if (checkLength(firstPassword)){
+    if (checkLength(firstPassword)) {
         setValueToTrue(passwordLength);
         checks++;
     }
     else {
         setValueToFalse(passwordLength);
     }
-    if (checkAlphaUpper(firstPassword)){
+    if (checkAlphaUpper(firstPassword)) {
         setValueToTrue(alphaUpper);
         checks++;
     }
     else {
         setValueToFalse(alphaUpper);
     }
-    if (checkAlphaLower(firstPassword)){
+    if (checkAlphaLower(firstPassword)) {
         setValueToTrue(alphaLower);
         checks++;
     }
     else {
         setValueToFalse(alphaLower);
     }
-    if (checkNumeric(firstPassword)){
+    if (checkNumeric(firstPassword)) {
         setValueToTrue(numeric);
         checks++;
     }
     else {
         setValueToFalse(numeric);
     }
-    if (checkSpecialChars(firstPassword)){
+    if (checkSpecialChars(firstPassword)) {
         setValueToTrue(specialChars);
         checks++;
     }
     else {
         setValueToFalse(specialChars);
     }
-    if (checkNoBadChars(firstPassword)){
+    if (!checkBadChars(firstPassword)) {
         setValueToTrue(noBadChars);
         checks++;
     }
@@ -94,19 +93,19 @@ function checkPasswordComplexity(password){
     */
     console.log("checks = " + checks);
 }
-function checkPasswordsMatch(password){
+function checkPasswordsMatch(password) {
     secondCheck = checks;
     secondPassword = password;
     console.log("checking matching password");
 
-    if (checkPasswordMatch(secondPassword, firstPassword)){
+    if (checkPasswordMatch(secondPassword, firstPassword)) {
         setValueToTrue(passwordMatch);
         secondCheck++;
     }
     else {
         setValueToFalse(passwordMatch);
     }
-    if (secondCheck == CHECKSGOOD){
+    if (secondCheck == CHECKSGOOD) {
         setValueToTrue(okPassword);
         enableInput(submitButton);
     }
@@ -116,41 +115,41 @@ function checkPasswordsMatch(password){
     }
     console.log("checks = " + secondCheck);
 }
-function checkLength(password){
-    if (password.length >= PASSWORDLENGTH){
+function checkLength(password) {
+    if (password.length >= PASSWORDLENGTH) {
         return true;
     }
     else {
         return false;
     }
 }
-function checkAlphaUpper(password){
+function checkAlphaUpper(password) {
     let charCode, i, len, alpha;
     alpha = false;
 
     for (i = 0, len = password.length; i < len; i++) {
         charCode = password.charCodeAt(i);
-        if (charCode > 64 && charCode < 91){ 
+        if (charCode > 64 && charCode < 91) {
             alpha = true;
-            goodChars ++;
+            goodChars++;
         }
     }
     return alpha;
 }
-function checkAlphaLower(password){
+function checkAlphaLower(password) {
     let charCode, i, len, alpha;
     alpha = false;
 
     for (i = 0, len = password.length; i < len; i++) {
         charCode = password.charCodeAt(i);
-        if (charCode > 96 && charCode < 123) { 
+        if (charCode > 96 && charCode < 123) {
             alpha = true;
-            goodChars ++;
+            goodChars++;
         }
     }
     return alpha;
 }
-function checkNumeric(password){
+function checkNumeric(password) {
     let charCode, i, len, numeric;
     numeric = false;
 
@@ -158,12 +157,12 @@ function checkNumeric(password){
         charCode = password.charCodeAt(i);
         if (charCode > 47 && charCode < 58) {
             numeric = true;
-            goodChars ++;
+            goodChars++;
         }
     }
     return numeric;
 }
-function checkSpecialChars(password){
+function checkSpecialChars(password) {
     const specials = [33, 63, 64, 95, 126];
     let charCode, i, len, special;
     special = false;
@@ -172,29 +171,43 @@ function checkSpecialChars(password){
         charCode = password.charCodeAt(i);
         if (specials.includes(charCode)) {
             special = true;
-            goodChars ++;
+            goodChars++;
         }
     }
     return special;
 }
-function checkNoBadChars(password){
-    if (password.length > 0) {
-        if (goodChars == password.length){
-            return true;
-        }
-        else {
-            return false;
+//todo refactor later
+function checkBadChars(password) {
+    const BADCHARS = [34, 39, 47, 59, 60, 62, , 91, 93, 123, 125,];
+    let charCode, i, len, badChar;
+    badChar = true;
+    len = password.length;
+    if (len > 0) {
+        for (i = 0, len; i < len; i++) {
+            charCode = password.charCodeAt(i);
+            if ((BADCHARS.includes(charCode))) {
+                badChar = false;
+            }
         }
     }
+    return badChar;
 }
-function checkNoWords(password){
+function checkNoWords(password) {
     return false;
 }
-function checkPasswordMatch(password, passwordTwo){
-    if (password === passwordTwo){
+function checkPasswordMatch(password, passwordTwo) {
+    if (password === passwordTwo) {
         return true;
     }
     else {
         return false;
     }
 }
+
+exports.checkLength = checkLength;
+exports.checkAlphaUpper = checkAlphaUpper;
+exports.checkAlphaLower = checkAlphaLower;
+exports.checkNumeric = checkNumeric;
+exports.checkSpecialChars = checkSpecialChars;
+exports.checkBadChars = checkBadChars;
+exports.checkPasswordMatch = checkPasswordMatch;

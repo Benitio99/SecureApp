@@ -11,7 +11,7 @@
 
   */
   if (isset($_POST["Password"])) {
-    $unsanitisedPassword = 
+    $unsanitisedPassword = $_POST["Password"];
     sanatisePassword();
     if(PasswordValid($TestForPassowrd,$_POST["Password"])) {
       echo 'Password True <br>';

@@ -1,6 +1,6 @@
 <?php
 
-include ("connection.php");
+require ("server.php");
 
 function insertNewUser($connection, array $arguments) {
     $placeholders = array_fill(0, count($arguments), '?');
@@ -38,6 +38,17 @@ $registrationDetails = array(
     "surname" => "Doe",
     "email" => "john@example.com"
 );
+
+// Now we check if the data was submitted, isset() function will check if the data exists.
+if (!isset($_POST['username'], $_POST['password'], $_POST['email'])) {
+	// Could not get the data that should have been sent.
+	exit('Please complete the registration form!');
+}
+// Check for empty input values.
+if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email'])) {
+	// One or more values are empty.
+	exit('Please complete the registration form');
+}
 #insertNewUser($baseConnection, $registrationDetails);
 /*
 // Define variables and initialize with empty values
