@@ -122,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 function test_input($data) {
 // you could clean your inputs here
-  $data = filter
+  $data = filter;
   return $data;
 }
 ?>
