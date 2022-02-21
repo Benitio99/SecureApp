@@ -5,5 +5,6 @@
     define("ROOT", "root");
     define("SADUSERNAME", "SADUSER");
     define("SADPASSWORD", "SADUSER");
-
+    define("AESKEY", "secretAESKey");
+    
 ?>

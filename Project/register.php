@@ -14,7 +14,7 @@ require("registerProcess.php");
 </head>
 
 <body>
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
+    <form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="GET">
         <h2>Registration Form</h2>
         <p>Please fill out this form to register with our site.</p>
         <div class="inputbox">
@@ -47,8 +47,8 @@ require("registerProcess.php");
                 id="passwordTwo">
         </div><!-- End of passwordTwo -->
         <div class="buttons">
-            <button disabled="true" type="submit" value="Send Form" name="submit" id="submit">Submit</button>
-            <button type="reset" value="Clear Form" name="reset">Reset</button>
+            <input disabled="true" type="submit" value="Send Form" name="submit" id="submit"></input>
+            <input type="reset" value="Clear Form" name="reset"></input>
         </div> <!-- End of Submit/Clear -->
     </form>
     <aside>

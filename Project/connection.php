@@ -1,10 +1,15 @@
 <?php
 require("config.php");
-$pdo;
+
+$baseConnection = new PDO("mysql:host=" . HOST , ROOT, "");
+
+//$SADUserConnection = new PDO("mysql:host=" . HOST , SADUSER, SADPASSWORD);
+//$pdo = new PDO("mysql:host=localhost", "root", "");
 function testConnection($connection){
     try {
-        $pdo = new PDO($connection, ROOT);
-        if ($pdo) {
+        //$databaseConnection = new PDO("mysql:host = " . HOST . ";dbname = " . DATABASE . ";username = " . SADUSER . "; password = " . SADPASSWORD . "; charset=UTF8");
+        //$pdo = new PDO("mysql:host = ;dbname=demo", "root", ""$connection, ROOT);
+        if ($connection) {
             return true;
         }
     } catch (PDOException $error) {
@@ -19,59 +24,53 @@ function testConnection($connection){
 // Create connection Statement
 #$baseConnection = "mysql:host=".HOST.";charset=UTF8";
 
-$baseLink = mysqli_connect(HOST, ROOT);
+//$baseLink = mysqli_connect(HOST, ROOT);
 
  // Test the connection
- if ($baseLink){
-    echo "<br>Connected to database system successfully";
-
-    $createSADUser = "CREATE USER IF NOT EXISTS '" . SADUSERNAME . "'@'" . HOST . "' IDENTIFIED BY '" . SADPASSWORD  ."';";
-    $result = mysqli_query($baseLink, $createSADUser);
-   
-    if ($result) {
-        echo "<br>Created SAD user successfully\n";
-        #$baseLink = mysqli_connect(HOST, SADUSERNAME, SADPASSWORD, DATABASE);
-
-        $createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " . DATABASE . ";";
-        $result = mysqli_query($baseLink, $createDatabaseSQL);
-    
-        if ($result) {
-            echo "<br>Database Created Successfully\n";
-            $createTableSQL = "
-            USE access;
-            CREATE TABLE IF NOT EXISTS '" . TABLE . "' (
-                `userId` INT(10) UNSIGNED ZEROFILL AUTO_INCREMENT NOT NULL,
-                `username` VARCHAR(20) NOT NULL,
-                `admin?` BOOLEAN NOT NULL DEFAULT FALSE,
-                `firstName` VARCHAR(20) NOT NULL,
-                `surname` VARCHAR(20) NOT NULL,
-                `email` VARCHAR(30) NOT NULL,
-                `password` VARCHAR(30) NOT NULL,
-                PRIMARY KEY ('userId'),
-                UNIQUE (`email`)
-            )
-            COMMENT = 'A table of all users';
-            ";
-            $result = mysqli_multi_query($baseLink, $createTableSQL);
-            if ($result){
-                echo "<br>Table Created Successfully\n";
+    if (testConnection($baseConnection)){
+        echo "<br>Connected to database system successfully";
+        $createSADUsersql = "CREATE USER IF NOT EXISTS '" . SADUSERNAME . "'@'" . HOST . "' IDENTIFIED BY '" . SADPASSWORD  ."';";
+        try{
+            $baseConnection->exec($createSADUsersql);
+            echo "<br>Created SAD user successfully\n";
+            $createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " . DATABASE . ";";
+            try{
+                $baseConnection->exec($createDatabaseSQL);
+                echo "<br>Database Created Successfully\n";
+                $sql = "USE " . DATABASE . ";";
+                $baseConnection->exec($sql);
+                $createTableSQL = "CREATE TABLE IF NOT EXISTS " . TABLE . " (
+                                        userId INT(10) UNSIGNED ZEROFILL NOT NULL PRIMARY KEY,
+                                        username VARCHAR(20) NOT NULL UNIQUE,
+                                        admin BOOLEAN NOT NULL DEFAULT FALSE,
+                                        firstName VARCHAR(20) NOT NULL,
+                                        surname VARCHAR(20) NOT NULL,
+                                        email VARCHAR(30) NOT NULL UNIQUE,
+                                        password BLOB NOT NULL
+                                    )
+                                    COMMENT = 'A table of all users';";
+                try{
+                    $baseConnection->exec($createTableSQL);
+                    echo "<br>Table Created Successfully\n";
+                }
+                catch (PDOException $e){
+                    echo "<br>ERROR: Could not execute " . $createTableSQL . ": " . $e->getMessage();
+                    unset($baseConnection);
+                }
             }
-            else {
-                echo "<br>Table could not be created!\n";
+            catch (PDOException $e){
+                echo "<br>ERROR: Could not execute " . $createDatabaseSQL . ": " . $e->getMessage();
+                unset($baseConnection);
+
             }
         }
-        else {
-                echo "<br>Database could not be created!\n";
+        catch (PDOException $e){
+            echo "<br>ERROR: Could not execute " . $createSADUsersql . ": " . $e->getMessage();
+            unset($baseConnection);
         }
     }
     else {
-        echo "<br>SADUser could not be created!\n";
+        echo "<br>Could not connect to the system\n";
+        unset($baseConnection);
     }
- }
- else {
-    echo "<br>Could Not connect\n";
-    die("Error, could not connect: ".mysqli_connect_error());
- }
- echo "\n";
-
 ?>

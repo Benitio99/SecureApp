@@ -75,7 +75,7 @@ function checkPasswordComplexity(password) {
     else {
         setValueToFalse(specialChars);
     }
-    if (!checkBadChars(firstPassword)) {
+    if (checkBadChars(firstPassword)) {
         setValueToTrue(noBadChars);
         checks++;
     }
@@ -91,6 +91,12 @@ function checkPasswordComplexity(password) {
         setValueToFalse(noWords);
     }
     */
+    if (checks === 6) {
+        return true;
+    }
+    else {
+        return false;
+    }
     console.log("checks = " + checks);
 }
 function checkPasswordsMatch(password) {
@@ -211,3 +217,4 @@ exports.checkNumeric = checkNumeric;
 exports.checkSpecialChars = checkSpecialChars;
 exports.checkBadChars = checkBadChars;
 exports.checkPasswordMatch = checkPasswordMatch;
+exports.checkPasswordComplexity = checkPasswordComplexity;

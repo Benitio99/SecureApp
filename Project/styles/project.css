@@ -26,7 +26,6 @@ h2 {
     font-size: 1.8em;
     text-align: center;
     background-color: rgb(153, 197, 186);
-    color: black;
 }
 p {
     text-align: center;
@@ -76,28 +75,27 @@ input{
     left: 25%;
     width: 50%;
 }
-button {
+input[type=submit], input[type=reset] {
     display: inline-block;
     padding: 10px 20px;
+    margin-left: 2em;
     font-size: 1.5rem;
     text-align: center;
     border-radius: .5em;
     cursor: pointer;
     color: white;
 }
-button[type=submit] {
+input[type=submit] {
     background-color: rgb(35,120,35);
-    margin-left: 2em;
     box-shadow: 4px 8px 10px 1px rgba(35,120,35,0.6);
 }
-button[disabled=true] {
+input[disabled=true] {
     pointer-events: none;
     background-color: rgb(116, 153, 116);
     cursor: none;
 }
-button[type=reset] {
+input[type=reset] {
     background-color: rgb(120,35,35);
-    margin-left: 2em;
     box-shadow: 4px 8px 10px 1px rgba(120,35,35,0.6);
 }
 ::placeholder {

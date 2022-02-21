@@ -61,7 +61,7 @@ describe('Password complexity rules...', function () {
             assert.equal(pC.checkBadChars(GOODPASSWORD), true);
         });
     })
-    describe('Special Characters', function () {
+    describe('Password Match', function () {
         it('returns true when second password matches first password', () => {
             assert.equal(pC.checkPasswordMatch(GOODPASSWORD, GOODPASSWORD), true);
         });
@@ -70,9 +70,13 @@ describe('Password complexity rules...', function () {
             assert.equal(pC.checkPasswordMatch(GOODPASSWORD, BADPASSWORD), false);
         });
     })
-})
+    /*describe('Check Password in full', function () {
+        it('returns true if first 6 tests are positive ', () => {
+            assert.equal(pC.checkPasswordComplexity(GOODPASSWORD), true);
+        });
 
-/*
-test("Password Length OK", () => {
-    expect(checkLength(GOODPASSWORD)).toBe(true);
-})*/
+        it('returns false if any of the 6 tests are positive', () => {
+            assert.equal(pC.checkPasswordComplexity(BADPASSWORD), false);
+        });
+    })*/
+})
