@@ -2,8 +2,6 @@
 
 require ("server.php");
 
-//$pdo;
-//$statement;
 function insertNewUser($connection) {
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Now we check if the data was submitted, isset() function will check if the data exists.
@@ -48,7 +46,7 @@ function insertNewUser($connection) {
                     break;
                 }
             } while(true);
-            echo "<br>Constructing Statement\n";
+            //echo "<br>Constructing Statement\n";
             // Prepare an insert statement
             $sql = "INSERT INTO " . TABLE . "(userId, username, admin, firstName, surname, email, password) VALUES(:userId, :username, :admin, :firstName, :surname, :email, AES_ENCRYPT(:password, '" . AESKEY . "'))";
             $statement = $connection->prepare($sql);
@@ -61,7 +59,7 @@ function insertNewUser($connection) {
                 $email = $_GET['email'],
                 $password = $_GET['passwordOne']
             ];
-            
+
             
             
             //$statement -> bindValue(":username", $username);
@@ -89,7 +87,7 @@ function insertNewUser($connection) {
             die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
         }
         if ($inserted) {
-            echo "<br><h1>Records inserted successfully.<h1>";
+            //echo "<br><h1>Records inserted successfully.<h1>";
         }
         
         // Close statement
@@ -101,24 +99,13 @@ function insertNewUser($connection) {
 #}
 
 if (isset($_GET["submit"])){
-    echo "<br><h3>attempting to input user<h3>";
+    //echo "<br><h3>attempting to input user<h3>";
     insertNewUser($databaseConnection);
 }
 else {
-    echo "<br><h3>Please enter your credentials below<h3>";
+    //echo "<br><h3>Please enter your credentials below<h3>";
 }
-//echo "<br><h1>" . $_GET["submit"] . "<h1>";
-#insertNewUser($baseConnection, $registrationDetails);
-/*
-// Define variables and initialize with empty values
-$firstname = $surname = $email = "";
-$firstNameError = $surnameError = $emailError = "";
-$inputs = array(
-    "firstName",
-    "surname",
-    "email"
-);
-*/
+
 // Processing form data when form is submitted
 /*
 if($_SERVER["REQUEST_METHOD"] == "GET"){
@@ -145,15 +132,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         elseif ($inputString == "email"){
 
         }
-    }
-    // Validate salary
-    $input_salary = trim($_GET["salary"]);
-    if(empty($input_salary)){
-        $salary_err = "Please enter the salary amount.";     
-    } elseif(!ctype_digit($input_salary)){
-        $salary_err = "Please enter a positive integer value.";
-    } else{
-        $salary = $input_salary;
     }
     
     // Check input errors before inserting in database

@@ -1,5 +1,5 @@
 
-let passwordLength, alphaUpper, alphaLower, numeric, specialChars, noWords, okPassword, passwordMatch, submitButton;
+let passwordLength, alphaUpper, alphaLower, numeric, specialChars, noWords, okPassword, passwordMatch, passwordOneInfo, passwordTwoInfo, submitButton;
 let checks, goodChars;
 let firstPassword, secondPassword;
 const CHECKSGOOD = 7;
@@ -15,6 +15,8 @@ function setAttributes() {
     noWords = document.getElementById("noWords");
     okPassword = document.getElementById("okPassword");
     passwordMatch = document.getElementById("passwordMatch");
+    passwordOneInfo = document.getElementById("passwordOneInfo");
+    passwordTwoInfo = document.getElementById("passwordTwoInfo");
     submitButton = document.getElementById("submit");
 }
 function disableInput(element) {
@@ -93,8 +95,10 @@ function checkPasswordComplexity(password) {
     */
     if (checks === 6) {
         return true;
+        passwordOneInfo.innerHTML = "";
     }
     else {
+        passwordOneInfo.innerHTML = "password does not meet the required complexity rules";
         return false;
     }
     console.log("checks = " + checks);

@@ -13,7 +13,7 @@ function testConnection($connection){
             return true;
         }
     } catch (PDOException $error) {
-        echo "Connection failed : ". $error->getMessage();
+        //echo "Connection failed : ". $error->getMessage();
         return false;
     }
 }
@@ -28,15 +28,15 @@ function testConnection($connection){
 
  // Test the connection
     if (testConnection($baseConnection)){
-        echo "<br>Connected to database system successfully";
+        //echo "<br>Connected to database system successfully";
         $createSADUsersql = "CREATE USER IF NOT EXISTS '" . SADUSERNAME . "'@'" . HOST . "' IDENTIFIED BY '" . SADPASSWORD  ."';";
         try{
             $baseConnection->exec($createSADUsersql);
-            echo "<br>Created SAD user successfully\n";
+            //echo "<br>Created SAD user successfully\n";
             $createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " . DATABASE . ";";
             try{
                 $baseConnection->exec($createDatabaseSQL);
-                echo "<br>Database Created Successfully\n";
+                //echo "<br>Database Created Successfully\n";
                 $sql = "USE " . DATABASE . ";";
                 $baseConnection->exec($sql);
                 $createTableSQL = "CREATE TABLE IF NOT EXISTS " . TABLE . " (
@@ -51,26 +51,26 @@ function testConnection($connection){
                                     COMMENT = 'A table of all users';";
                 try{
                     $baseConnection->exec($createTableSQL);
-                    echo "<br>Table Created Successfully\n";
+                    //echo "<br>Table Created Successfully\n";
                 }
                 catch (PDOException $e){
-                    echo "<br>ERROR: Could not execute " . $createTableSQL . ": " . $e->getMessage();
+                    //echo "<br>ERROR: Could not execute " . $createTableSQL . ": " . $e->getMessage();
                     unset($baseConnection);
                 }
             }
             catch (PDOException $e){
-                echo "<br>ERROR: Could not execute " . $createDatabaseSQL . ": " . $e->getMessage();
+                //echo "<br>ERROR: Could not execute " . $createDatabaseSQL . ": " . $e->getMessage();
                 unset($baseConnection);
 
             }
         }
         catch (PDOException $e){
-            echo "<br>ERROR: Could not execute " . $createSADUsersql . ": " . $e->getMessage();
+            //echo "<br>ERROR: Could not execute " . $createSADUsersql . ": " . $e->getMessage();
             unset($baseConnection);
         }
     }
     else {
-        echo "<br>Could not connect to the system\n";
+        //echo "<br>Could not connect to the system\n";
         unset($baseConnection);
     }
 ?>

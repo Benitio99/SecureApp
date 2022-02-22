@@ -8,22 +8,26 @@ body {
     font-size: 1.3em;
     font-family: "Helvetica";
     position: relative;
+    background-color: rgb(37, 74, 92);
 }
 form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
     position: relative;
     box-sizing: border-box;
+    padding: 1.5em;
+    padding-bottom: .3em;
     width: 50%;
     height: 90vh;
     left: 20%;
     top: 1em;
-    border: .1em groove rgb(35, 35, 180);
-    background-image: linear-gradient(120deg, rgb(185, 138, 138) 0%, rgb(211, 216, 147) 100%);
-    box-shadow: 3px 8px 10px 1px rgba(102, 116, 28, 0.6);
+    background-color: rgb(23, 51, 65);
 }
 h2 {
     margin: 0;
     padding: .4em;
-    font-size: 1.8em;
+    font-size: 1.5em;
     text-align: center;
     background-color: rgb(153, 197, 186);
 }
@@ -34,52 +38,62 @@ aside {
     position:absolute;
     top: 50%;
     left:75%;
-    width: 25%;
-    padding-left: .5rem;
-    margin-left: .5rem;
+    width: 20%;
+    padding-left: 3em;
     float: right;
     box-shadow: inset 5px 0 5px -5px #fc4444;
     font-style: italic;
     font-size: .5em;
     color: black;
-}
+}/*
 .asideChecks {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 3fr 1fr 2fr;
 }
 aside input[type=checkbox] {
     pointer-events: none;
     cursor: none;
-    width: 1em;
-    height: 1em;
-}
+    margin-top: 0.5em;
+}*/
 .inputbox {
-    margin-top: .6em;
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+    grid-template-rows: 1fr .9em 1fr;
+    grid-template-areas:    ". . warningInfo ."
+                            "label label input ."
+                            ". . info .";
     width: 90%;
 }
 form label {
-    width: 100%;
-    padding: 0;
-    margin-left: 4em;
+    grid-area: label;
     user-select: none;
+    font-size: .7em;
+}
+.warningInfo {
+    grid-area: warningInfo;
+    font-size: .5em;
+    color: red;
 }
 input{
-    margin-right: 2em;
-    float: right;
-    width: 30%;
+    grid-area: input;
+}
+.extraInfo {
+    grid-area: info;
+    font-size: .5em;
 }
 
 .buttons {
-    top: 3em;
+    top: .5em;
     position: relative;
     left: 25%;
     width: 50%;
 }
 input[type=submit], input[type=reset] {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-left: 2em;
-    font-size: 1.5rem;
+    /*display: inline-block;
+    */
+    width: 40%;
+    padding: 8px 16px;
+    font-size: 1.2rem;
     text-align: center;
     border-radius: .5em;
     cursor: pointer;
@@ -89,14 +103,15 @@ input[type=submit] {
     background-color: rgb(35,120,35);
     box-shadow: 4px 8px 10px 1px rgba(35,120,35,0.6);
 }
+input[type=reset] {
+    /*margin-left: 50%;
+    */background-color: rgb(120,35,35);
+    box-shadow: 4px 8px 10px 1px rgba(120,35,35,0.6);
+}
 input[disabled=true] {
     pointer-events: none;
     background-color: rgb(116, 153, 116);
     cursor: none;
-}
-input[type=reset] {
-    background-color: rgb(120,35,35);
-    box-shadow: 4px 8px 10px 1px rgba(120,35,35,0.6);
 }
 ::placeholder {
     font-style:italic;

@@ -23,10 +23,10 @@ $databaseConnection = new PDO("mysql:host=".HOST.";dbname=".DATABASE.";charset=U
 
  // Test the connection
  if (testConnection($databaseConnection)){
-    echo "<br>Connected to ".DATABASE." database successfully";
+    //echo "<br>Connected to ".DATABASE." database successfully";
  }
  else {
-     echo "<br>Could not connect to ".DATABASE." database.";
+     //echo "<br>Could not connect to ".DATABASE." database.";
  }
- echo "\n";
+ //echo "\n";
 ?>

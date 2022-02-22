@@ -1,15 +1,9 @@
 <?php
   require_once 'header.php';
   include("loginProcess.php");
+
   echo date('h:i:s:ns') . "<br>";
-  /*
-  IF DB_ID('dms') IS NOT NULL
-  --code mine :)
-  print 'db exists'
 
-  system("cmd /c start.bat");
-
-  */
   if (isset($_POST["Password"])) {
     $unsanitisedPassword = $_POST["Password"];
     sanatisePassword();
@@ -32,9 +26,34 @@
   <html>
     <head>
       <title>User Login</title>
-          <link href="styles/project.css"rel="stylesheet"></link>
+      <link href="styles/project.css"rel="stylesheet"></link>
     </head>
     <body>
+      <nav>
+        <button id="hamburger">
+          <div class="bar" id="barOne"></div>
+          <div class="bar" id="barTwo"></div>
+          <div class="bar" id="barThree"></div>
+        </button>
+        <div id="navWrapper">
+          <ul class="navLinks">
+            <li id="currentPage"><a href="index.html" title="Pierce">Home</a></li>
+            <li><a href="programming.html" title="Programming">Programming</a></li>
+            <?php 
+            if (isset()) {
+              echo 
+              '<li><a href="gaming.html" title="Gaming">Gaming</a></li>
+              <li><a href="music.html" title="Music">Music</a></li>'
+            }
+            ?>
+            <?php 
+            if (isset()) {
+              echo '<li><a href="logout.html" title="Logout">Logout</a></li>'
+            }  
+            ?>
+          </ul>
+        </div>
+      </nav>
       <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
             <h2>Login</h2>
             <p>Please enter your login information below.</p>
