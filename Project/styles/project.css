@@ -1,8 +1,17 @@
 /*
     Pierce Bennett	C00242526
     16/01/2022
-    Lab3E1
+    Project
 */
+:root {
+    --realBlue: #153383;
+    --darkBlue: #7aa2bd;
+    --lightBlue: #bce2f0;
+    --otherBlue: #8fdaf5;
+    --darkGreen: #2f975b;
+    --light: #def3e6;
+    --slate: #8e8d8a;
+}
 body {
     background-color:cornsilk;
     font-size: 1.3em;
@@ -10,6 +19,114 @@ body {
     position: relative;
     background-color: rgb(37, 74, 92);
 }
+/*--- navigation Section ---*/
+nav {
+    position:absolute;
+    width: 100%;
+    height: 100vh;
+}
+#navWrapper {
+    position:absolute;
+    height: 100%;
+    width: 100%;
+    right: 100%;
+    text-align: center;
+	background-color:var(--slate);
+	opacity: 0;
+    margin: auto;
+    transition: all 300ms ease-in;
+}
+.show {
+    opacity: .8 !important;
+    right: 0% !important;
+    z-index: 50 !important;
+}
+#hamburger {
+    position: fixed;
+    top: 2em;
+    left: 2em;
+    width: 3em;
+    height: 3em;
+    background-color: var(--light);
+    border: .15em solid var(--realBlue);
+    opacity: 1;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    vertical-align:middle;
+    z-index: 100;
+    transition: all 3s ease-in-out;
+}
+/*--- Hamburger Lines ---*/
+.bar {
+    position: absolute;
+    left: 12.5%;
+    width: 75%;
+    height: 10%;
+    background: var(--darkBlue);
+    display: inline-block;
+    transition: all 1s ease;
+}
+#barOne {
+    top: 20%;
+}
+#barTwo {
+    top: 45%   
+}
+#barThree {
+    top: 70%;
+}
+/*Styling when Menu is shown*/
+.cross#barOne {
+    top: 45%;
+    transform: rotate(-45deg);
+}
+.cross#barTwo {
+    opacity: 0;
+}
+.cross#barThree {
+    top: 45%;
+    transform: rotate(45deg);
+}
+/*--- Navigation Links ---*/
+nav ul {
+    position: relative;
+    top: 10%;
+    padding: .2em;
+}
+nav ul li {
+    text-align: center;
+    margin: auto;
+    margin-bottom: .5em;
+    width: 50%;
+    height: 10%;
+    text-transform: uppercase;
+    background-color: var(--lightBlue);
+    font-size:1.2em;
+    border: .15em solid var(--realBlue);
+}
+nav ul li:hover{
+	background-color: var(--otherBlue);
+	cursor: pointer;
+}
+nav ul li a {
+    display: block;
+    padding: 1em;
+    transition: all 1s ease-in-out;
+	color: black;
+}
+#currentPage {
+	background-image: linear-gradient(90deg, var(--otherBlue) 10%, var(--lightBlue) 11%);
+}
+/*--- Main Section ---*/
+main {
+    grid-area: main;
+    transition: all 2s ease;
+}
+.hide {
+    opacity: .1;
+}
+/*--- Form Section ---*/
 form {
     display: grid;
     grid-template-columns: 1fr;

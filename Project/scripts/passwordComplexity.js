@@ -84,15 +84,6 @@ function checkPasswordComplexity(password) {
     else {
         setValueToFalse(noBadChars);
     }
-    /*
-    if (checkNoWords(firstPassword)){
-        setValueToTrue(noWords);
-        checks++;
-    }
-    else {
-        setValueToFalse(noWords);
-    }
-    */
     if (checks === 6) {
         return true;
         passwordOneInfo.innerHTML = "";

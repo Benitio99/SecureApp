@@ -1,10 +1,9 @@
 <?php
 require("config.php");
 
+// Create connection Statement
 $baseConnection = new PDO("mysql:host=" . HOST , ROOT, "");
 
-//$SADUserConnection = new PDO("mysql:host=" . HOST , SADUSER, SADPASSWORD);
-//$pdo = new PDO("mysql:host=localhost", "root", "");
 function testConnection($connection){
     try {
         //$databaseConnection = new PDO("mysql:host = " . HOST . ";dbname = " . DATABASE . ";username = " . SADUSER . "; password = " . SADPASSWORD . "; charset=UTF8");
@@ -17,14 +16,6 @@ function testConnection($connection){
         return false;
     }
 }
-
-// Create connection Statement
-#$databaseConnection = "mysql:host=".HOST.";dbname=".DATABASE.";charset=UTF8";
-
-// Create connection Statement
-#$baseConnection = "mysql:host=".HOST.";charset=UTF8";
-
-//$baseLink = mysqli_connect(HOST, ROOT);
 
  // Test the connection
     if (testConnection($baseConnection)){
@@ -61,7 +52,6 @@ function testConnection($connection){
             catch (PDOException $e){
                 //echo "<br>ERROR: Could not execute " . $createDatabaseSQL . ": " . $e->getMessage();
                 unset($baseConnection);
-
             }
         }
         catch (PDOException $e){

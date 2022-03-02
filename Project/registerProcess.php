@@ -2,46 +2,16 @@
 
 require ("server.php");
 
-function insertNewUser($connection) {
-    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // Now we check if the data was submitted, isset() function will check if the data exists.
-    /*
-    if (!isset($_POST['username']) && !isset($_POST['firstName']) && !isset($_POST['surname']) && !isset($_POST['email']) && !isset($_POST['passwordOne'])) {
-        // Could not get the data that should have been sent.
-        exit('Please complete the registration form!');
-        echo "form not filled";
-    }
-    
-    else if (empty($_POST['username']) || empty($_POST['firstName']) || empty($_POST['surname']) || empty($_POST['email']) || empty($_POST['password'])) {
-        // One or more values are empty.
-        exit('Please complete the registration form');
-    }
-    
-    else {*/
-        //echo "form filled";
-        /* Attempt MySQL server connection. Assuming you are running MySQL
-        server with default setting (user 'root' with no password) */
-        /*try{
-            echo "creating pdo";
-            $pdo = new PDO('mysql:host = "' . HOST . '";dbname = "' . DATABASE . ';', SADUSER, SADPASSWORD);
-            // Set the PDO error mode to exception
-        } catch(PDOException $e){
-            die("ERROR: Could not connect. " . $e->getMessage());
-        }
-        */
-        // Attempt insert query execution
+function insertNewUser() {
+    $databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try{
             do {
                 $randomNumber = mt_rand(0, 9999999999);
                 $randomCheckSql = "SELECT 1 FROM " . TABLE . " WHERE userId = $randomNumber";
-                $statement = $connection->prepare($randomCheckSql);
+                $statement = $databaseConnection->prepare($randomCheckSql);
                 $statement->execute();
                 $id = $statement->fetchColumn();
-                //$query_object = mysqli_query($db_connection, "SELECT 1 FROM " . TABLE . " WHERE userId = $random_number");
-                //$query_record = mysqli_fetch_array($query_object);
-                //if(! $query_record) {
-                  //  break;
-                //}
+                
                 if(!$id) {
                     break;
                 }
@@ -60,11 +30,6 @@ function insertNewUser($connection) {
                 $password = $_GET['passwordOne']
             ];
 
-            
-            
-            //$statement -> bindValue(":username", $username);
-            // Bind parameters to statement
-            
             $statement->bindValue(':userId', $userId);
             $statement->bindValue(':username', $username);
             $statement->bindValue(':admin', $admin);
@@ -73,14 +38,6 @@ function insertNewUser($connection) {
             $statement->bindValue(':email', $email);
             $statement->bindValue(':password', $password);
             
-            /* Set the parameters values and execute
-            the statement again to insert another row */
-            /*$username = "";
-            $firstName = "John";
-            $surname = "Smith";
-            $email = "jsmith@email.com";
-            $password = "";
-            */
             $inserted = $statement->execute();
             
         } catch(PDOException $e){
@@ -89,22 +46,18 @@ function insertNewUser($connection) {
         if ($inserted) {
             //echo "<br><h1>Records inserted successfully.<h1>";
         }
-        
         // Close statement
         unset($statement);
         
         // Close connection
-        unset($connection);
+        unset($databaseConnection);
     }
-#}
+
 
 if (isset($_GET["submit"])){
     //echo "<br><h3>attempting to input user<h3>";
-    insertNewUser($databaseConnection);
-}
-else {
-    //echo "<br><h3>Please enter your credentials below<h3>";
-}
+    insertNewUser();
+
 
 // Processing form data when form is submitted
 /*
@@ -201,4 +154,8 @@ function getError($input){
     }
 }
 */
+}
+else {
+    //echo "<br><h3>Please enter your credentials below<h3>";
+}
 ?>

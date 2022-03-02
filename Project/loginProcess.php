@@ -1,9 +1,15 @@
 <?php
-function checkUserExists($connection){
-    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+require ("server.php");
+
+$_SESSION["loggedIn"] = False;
+$_SESSION["admin"] = False;
+
+function checkUserExists(){
+    $databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     try{
         $sql = "SELECT 1 FROM " . TABLE . " WHERE username = :username";
-        $statement = $connection->prepare($sql);
+        $statement = $databaseConnection->prepare($sql);
         $data = [
             $username = $_GET['username'],
         ];
@@ -12,32 +18,109 @@ function checkUserExists($connection){
         $result = $statement->execute();
         $id = $statement->fetchColumn();
         if ($id) {
-            return true;
+            return True;
+        }
+        else {
+            return False;
         }
     } catch(PDOException $e){
         die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
+        return false;
     }
     // Close statement
     unset($statement);
     // Close connection
-    unset($connection);
+    unset($databaseConnection);
 }
-function checkPasswordAgainstUser($connection) {
-    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // Now we check if the data was submitted, isset() function will check if the data exists.
-    /*
-    if (!isset($_POST['username']) && !isset($_POST['firstName']) && !isset($_POST['surname']) && !isset($_POST['email']) && !isset($_POST['passwordOne'])) {
-        // Could not get the data that should have been sent.
+function checkUsersPassword(){
+    $databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    try{
+        $sql = "SELECT Admin? FROM " . TABLE . " WHERE username = :username";
+        $statement = $databaseConnection->prepare($sql);
+        $data = [
+            $username = $unsanitisedUsername,
+        ];
+
+        $statement->bindValue(':username', $username);
+        $result = $statement->execute();
+        $admin = $statement->fetchColumn();
+        if ($admin) {
+            return True;
+        }
+        else {
+            return False;
+        }
+    } catch(PDOException $e){
+        die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
+        return False;
+    }
+    // Close statement
+    unset($statement);
+    // Close connection
+    unset($databaseConnection);
+}
+function checkUserIsAdmin(){
+    $databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    try{
+        $sql = "SELECT 1 FROM " . TABLE . " WHERE password = :password";
+        $statement = $databaseConnection->prepare($sql);
+        $data = [
+            $password = $unsanitisedPassword,
+        ];
+
+        $statement->bindValue(':password', $password);
+        $result = $statement->execute();
+        $password = $statement->fetchColumn();
+        if ($password) {
+            return True;
+        }
+        else {
+            return False;
+        }
+    } catch(PDOException $e){
+        die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
+        return False;
+    }
+    // Close statement
+    unset($statement);
+    // Close connection
+    unset($databaseConnection);
+}
+function processLogin() {
+        // Check if data is entered
+    if (!isset($_GET['username']) && !isset($_GET['password'])) {
         exit('Please complete the registration form!');
         echo "form not filled";
     }
-    
-    else if (empty($_POST['username']) || empty($_POST['firstName']) || empty($_POST['surname']) || empty($_POST['email']) || empty($_POST['password'])) {
-        // One or more values are empty.
-        exit('Please complete the registration form');
+    else {
+        //Form is filled in
+        $unsanitisedUsername = $_GET['username'];
+        echo "username: " . $unsanitisedUsername;
+        $unsanitisedPassword = $_GET['password'];
+        echo "password: " . $unsanitisedPassword;
+        if (checkUserExists()){
+            if (checkUsersPassword()) {
+                $_SESSION["loggedIn"] = True;
+                if (checkUserIsAdmin()) {
+                    $_SESSION["admin"] = True;
+                }
+                else {
+                    $_SESSION["admin"] = False;
+                }
+                Redirect('main.php');
+            }
+            else {
+
+            }
+        }
     }
+}
+if (isset($_GET["submit"])) {
+    processLogin();
+}
+function checkPasswordAgainstUser($connection) {
+    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    else {*/
         //echo "form filled";
         /* Attempt MySQL server connection. Assuming you are running MySQL
         server with default setting (user 'root' with no password) */
@@ -118,11 +201,4 @@ function checkPasswordAgainstUser($connection) {
     }
 #}
 
-if (isset($_GET["submit"])){
-    //echo "<br><h3>attempting to input user<h3>";
-    insertNewUser($databaseConnection);
-}
-else {
-    //echo "<br><h3>Please enter your credentials below<h3>";
-}
 ?>
