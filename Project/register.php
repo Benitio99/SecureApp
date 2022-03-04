@@ -1,6 +1,8 @@
 <?php
 require("header.php");
 require("registerProcess.php");
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,7 +25,7 @@ require("registerProcess.php");
             </button>
             <div id="navWrapper">
                 <ul class="navLinks">
-                    <li><a href="index.html" title="Home">Home</a></li>
+                    <li><a href="index.php" title="Home">Home</a></li>
                     <li id="currentPage"><a href="register.php" title="Register">Register</a></li>
                     <li><a href="login.php" title="Login">Login</a></li>
                     <?php 
@@ -36,6 +38,7 @@ require("registerProcess.php");
                     if ($_SESSION["loggedIn"] == True) {
                         echo "
                         <li><a href = 'main.php' title = 'Main'>Main</a></li>
+                        <li><a href = 'resetPassword.php' title = 'ResertPassword'>Reseet Password</a></li>
                         <li><a href = 'logout.php' title = 'Logout'>Logout</a></li>
                         ";
                     }

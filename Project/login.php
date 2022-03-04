@@ -38,19 +38,22 @@
       </button>
       <div id="navWrapper">
         <ul class="navLinks">
-          <li><a href="index.html" title="home">Home</a></li>
+          <li><a href="index.php" title="home">Home</a></li>
           <li id="currentPage"><a href="login.php" title="Login">Login</a></li>
           <li><a href="register.php" title="Register">Register</a></li>
           <?php 
             if (isset($_SESSION["admin"])) {
+              if ($_SESSION["admin"] == true) {
                 echo "
                 <li><a href = 'pageOne.html' title = 'pageOne'>PageOne</a></li>
                 <li><a href = 'pageTwo.html' title = 'pageTwo'>pageTwo</a></li>
                 ";
+              }
             }
             if ($_SESSION["loggedIn"] == True) {
                 echo "
                 <li><a href = 'main.php' title = 'Main'>Main</a></li>
+                <li><a href = 'resetPassword.php' title = 'ResertPassword'>Reseet Password</a></li>
                 <li><a href = 'logout.php' title = 'Logout'>Logout</a></li>
                 ";
             }

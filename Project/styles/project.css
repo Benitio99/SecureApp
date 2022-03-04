@@ -33,13 +33,14 @@ nav {
     text-align: center;
 	background-color:var(--slate);
 	opacity: 0;
+    z-index: 50;
     margin: auto;
     transition: all 300ms ease-in;
 }
 .show {
     opacity: .8 !important;
     right: 0% !important;
-    z-index: 50 !important;
+    
 }
 #hamburger {
     position: fixed;

@@ -1,7 +1,7 @@
 <?php
   require_once 'header.php';
   include("server.php");
-  echo date('h:i:s:ns') . "<br>";
+  
 
 ?>
 <!DOCTYPE html>
@@ -28,7 +28,6 @@
           <li id = "currentPage"><a href ="index.php" title = "Home">Home</a></li>
           <li><a href = "login.php" title = "Login">Login</a></li>
           <li><a href = "register.php" title = "Register">Register</a></li>
-          <li><a href = "logout.php" title = "Logout">Logout</a></li>
         </ul>
       </div>
     </nav>

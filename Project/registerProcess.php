@@ -2,61 +2,63 @@
 
 require ("server.php");
 
-function insertNewUser() {
-    $databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        try{
-            do {
-                $randomNumber = mt_rand(0, 9999999999);
-                $randomCheckSql = "SELECT 1 FROM " . TABLE . " WHERE userId = $randomNumber";
-                $statement = $databaseConnection->prepare($randomCheckSql);
-                $statement->execute();
-                $id = $statement->fetchColumn();
-                
-                if(!$id) {
-                    break;
-                }
-            } while(true);
-            //echo "<br>Constructing Statement\n";
-            // Prepare an insert statement
-            $sql = "INSERT INTO " . TABLE . "(userId, username, admin, firstName, surname, email, password) VALUES(:userId, :username, :admin, :firstName, :surname, :email, AES_ENCRYPT(:password, '" . AESKEY . "'))";
-            $statement = $connection->prepare($sql);
-            $data = [
-                $userId = $randomNumber,
-                $username = $_GET['username'],
-                $admin = false,
-                $firstName = $_GET['firstName'],
-                $surname = $_GET['surname'],
-                $email = $_GET['email'],
-                $password = $_GET['passwordOne']
-            ];
+function insertNewUser($databaseConnection) {
+    $sql = "";
+    try{
+        do {
+            $randomNumber = mt_rand(0, 9999999999);
+            $randomCheckSql = "SELECT 1 FROM " . TABLE . " WHERE userId = $randomNumber";
+            $statement = $databaseConnection->prepare($randomCheckSql);
+            $statement->execute();
+            $id = $statement->fetchAll();
+            
+            if(!$id) {
+                break;
+            }
+        } while(true);
+        //echo "<br>Constructing Statement\n";
+        // Prepare an insert statement
+        $sql = "INSERT INTO " . TABLE . "(userId, username, isAdmin, firstName, surname, email, password) VALUES(:userId, :username, :admin, :firstName, :surname, :email, AES_ENCRYPT(:password, '" . AESKEY . "'))";
+        $statement = $databaseConnection->prepare($sql);
+        $data = [
+            $userId = $randomNumber,
+            $username = $_GET['username'],
+            $admin = false,
+            $firstName = $_GET['firstName'],
+            $surname = $_GET['surname'],
+            $email = $_GET['email'],
+            $password = $_GET['passwordOne']
+        ];
 
-            $statement->bindValue(':userId', $userId);
-            $statement->bindValue(':username', $username);
-            $statement->bindValue(':admin', $admin);
-            $statement->bindValue(':firstName', $firstName);
-            $statement->bindValue(':surname', $surname);
-            $statement->bindValue(':email', $email);
-            $statement->bindValue(':password', $password);
-            
-            $inserted = $statement->execute();
-            
-        } catch(PDOException $e){
-            die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
-        }
-        if ($inserted) {
-            //echo "<br><h1>Records inserted successfully.<h1>";
-        }
-        // Close statement
-        unset($statement);
+        $statement->bindValue(':userId', $userId);
+        $statement->bindValue(':username', $username);
+        $statement->bindValue(':admin', $admin);
+        $statement->bindValue(':firstName', $firstName);
+        $statement->bindValue(':surname', $surname);
+        $statement->bindValue(':email', $email);
+        $statement->bindValue(':password', $password);
+        echo "<p>got to here.</p>";
+        $statement->query();
+        $inserted = $statement->fetchAll();
         
-        // Close connection
-        unset($databaseConnection);
+        
+    } catch(PDOException $e){
+        die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
     }
+    if ($inserted) {
+        //echo "<br><h1>Records inserted successfully.<h1>";
+    }
+    // Close statement
+    unset($statement);
+    
+    // Close connection
+    unset($databaseConnection);
+}
 
 
 if (isset($_GET["submit"])){
     //echo "<br><h3>attempting to input user<h3>";
-    insertNewUser();
+    insertNewUser($databaseConnection);
 
 
 // Processing form data when form is submitted

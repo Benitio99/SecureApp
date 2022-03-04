@@ -70,7 +70,7 @@
       -->
     <main id = "mainArea">
       <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
-        <h2>Login</h2>
+        <h2>Main Page</h2>
         <p>Please enter your login information below.</p>
         <div class="inputbox">
             <label for="username">Username:</label>
