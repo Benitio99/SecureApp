@@ -1,12 +1,6 @@
 <?php
   require_once 'header.php';
-  include("server.php");
   echo date('h:i:s:ns') . "<br>";
-
-  if (!isset($_SESSION)) {
-    session_start();
-  }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,4 +40,7 @@
     </main>
   </body>
 </html>
+<?php
+  include("logoutProcess.php");
+?>
     

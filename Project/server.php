@@ -4,26 +4,16 @@ require("connection.php");
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+if (!isset($_SESSION["sessionStartTime"])) {
+    $_SESSION["sessionStartTime"] = microtime(true); 
+}
 
 /*
 if (isset($_SESSION["loggedIn"])) {
     if ($_SESSION["loggedIn"]== False) {
         Redirect('Location: index.php', True, 301);
     }
-}*/
- // Test the connection
- /*
- if (testConnection($databaseConnection)){
-    echo "<br>Connected to ".DATABASE." database successfully";
- }
- else {
-     echo "<br>Could not connect to ".DATABASE." database.";
- }
- */
- //echo "\n";
-
- //place this before any script you want to calculate time
-$timeStart = microtime(true); 
+}*
 
 //sample script
 #for($index = 0; $index < 1000; $index++){

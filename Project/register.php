@@ -1,7 +1,6 @@
 <?php
-require("header.php");
-require("registerProcess.php");
-
+    include_once("header.php");
+    include_once("registerProcess.php");
 
 ?>
 <!DOCTYPE html>
@@ -29,18 +28,25 @@ require("registerProcess.php");
                     <li id="currentPage"><a href="register.php" title="Register">Register</a></li>
                     <li><a href="login.php" title="Login">Login</a></li>
                     <?php 
-                    if (isset($_SESSION["Admin"])) {
-                        echo "
-                        <li><a href = 'pageOne.html' title = 'pageOne'>PageOne</a></li>
-                        <li><a href = 'pageTwo.html' title = 'pageTwo'>pageTwo</a></li>
-                        ";
-                    }
-                    if ($_SESSION["loggedIn"] == True) {
-                        echo "
-                        <li><a href = 'main.php' title = 'Main'>Main</a></li>
-                        <li><a href = 'resetPassword.php' title = 'ResertPassword'>Reseet Password</a></li>
-                        <li><a href = 'logout.php' title = 'Logout'>Logout</a></li>
-                        ";
+                    
+                    if (isset($_SESSION["loggedIn"])) {
+                        if ($_SESSION["loggedIn"]== true) {
+                            echo "
+                                <li><a href = 'main.php' title = 'Main'>Main</a></li>
+                                ";
+                            if (isset($_SESSION["isAdmin"])) {
+                                if ($_SESSION["isAdmin"]== true) {
+                                echo "
+                                    <li><a href = 'pageOne.html' title = 'pageOne'>PageOne</a></li>
+                                    <li><a href = 'pageTwo.html' title = 'pageTwo'>pageTwo</a></li>
+                                ";
+                                }
+                            }
+                            echo "
+                                <li><a href = 'resetPassword.php' title = 'ResertPassword'>Reset Password</a></li>
+                                <li><a href = 'logout.php' title = 'Logout'>Logout</a></li>
+                            ";
+                        } 
                     }
                     ?>
                 </ul>
@@ -70,6 +76,19 @@ require("registerProcess.php");
                         name="email" required/>
                     <span class = "extraInfo" id = "usernameInfo" name = "usernameInfo">Must contain the @ symbol</span>
                 </div> <!-- End of Email -->
+                <?php 
+                    if (isset($_SESSION["isAdmin"])) {
+                        if ($_SESSION["isAdmin"]== true) {
+                        echo "
+                <div class='inputbox'>
+                    <label for='isAdmin'>Admin User?:</label>
+                    <input onblur='processInput(this.value)' type='radio' id='isAdmin' name='isAdmin' required/>
+                    <span class = 'extraInfo' id = 'usernameInfo' name = 'usernameInfo'>Must contain the @ symbol</span>
+                </div> <!-- End of Email -->
+                    ";
+                        }
+                    }
+                ?>
                 <div class="inputbox">
                     <label for="passwordOne">Enter Password:</label>
                     <span class = "warningInfo" id = "passwordOneInfo" name = "passwordOneInfo"></span>

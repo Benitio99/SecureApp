@@ -1,7 +1,55 @@
 <?php
 
-require ("server.php");
+include_once("server.php");
 
+function checkDuplicateEmail($databaseConnection, $email){
+    try{
+        $sql = "SELECT '*' FROM " . TABLE . " WHERE email = :email";
+        $statement = $databaseConnection->prepare($sql);
+        
+        $statement->bindValue(':email', $email);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        if (!$result) {
+            echo "<h3>email does not exist";
+            return false;
+        }
+        else {
+            return true;
+        }
+    } catch(PDOException $e){
+        die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
+        return False;
+    }
+    // Close statement
+    unset($statement);
+    // Close connection
+    unset($databaseConnection);
+}
+function checkDuplicateUsername($databaseConnection, $username){
+    try{
+        $sql = "SELECT '*' FROM " . TABLE . " WHERE username = :username";
+        $statement = $databaseConnection->prepare($sql);
+        
+        $statement->bindValue(':username', $username);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        if (!$result) {
+            echo "<h3>user does not exist";
+            return false;
+        }
+        else {
+            return true;
+        }
+    } catch(PDOException $e){
+        die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
+        return False;
+    }
+    // Close statement
+    unset($statement);
+    // Close connection
+    unset($databaseConnection);
+}
 function insertNewUser($databaseConnection) {
     $sql = "";
     try{
@@ -20,16 +68,21 @@ function insertNewUser($databaseConnection) {
         // Prepare an insert statement
         $sql = "INSERT INTO " . TABLE . "(userId, username, isAdmin, firstName, surname, email, password) VALUES(:userId, :username, :admin, :firstName, :surname, :email, AES_ENCRYPT(:password, '" . AESKEY . "'))";
         $statement = $databaseConnection->prepare($sql);
+        
         $data = [
             $userId = $randomNumber,
             $username = $_GET['username'],
-            $admin = false,
             $firstName = $_GET['firstName'],
             $surname = $_GET['surname'],
             $email = $_GET['email'],
             $password = $_GET['passwordOne']
         ];
-
+        if (isset($_GET["isAdmin"])) {
+            $data[$admin= $_GET["isAdmin"]];
+        }
+        else {
+                $data[$admin = false];
+        }
         $statement->bindValue(':userId', $userId);
         $statement->bindValue(':username', $username);
         $statement->bindValue(':admin', $admin);
@@ -37,8 +90,7 @@ function insertNewUser($databaseConnection) {
         $statement->bindValue(':surname', $surname);
         $statement->bindValue(':email', $email);
         $statement->bindValue(':password', $password);
-        echo "<p>got to here.</p>";
-        $statement->query();
+        $statement->execute();
         $inserted = $statement->fetchAll();
         
         
@@ -58,8 +110,31 @@ function insertNewUser($databaseConnection) {
 
 if (isset($_GET["submit"])){
     //echo "<br><h3>attempting to input user<h3>";
-    insertNewUser($databaseConnection);
-
+    $noDuplicates = false;
+    if (isset($_GET["username"])) {
+        $username = $_GET["username"];
+        if (checkDuplicateUsername($databaseConnection, $username)) {
+            echo "<br><p>please choose another username or go to the login page.</p>";
+        }
+        else {
+            if (isset($_GET["email"])) {
+                $email = $_GET["email"];
+                if (checkDuplicateEmail($databaseConnection, $email)) {
+                    echo "<br><p>please choose another email or go to the login page.</p>";
+                }
+                else {
+                    $noDuplicates = true;
+                }
+            }
+        }
+    }
+    
+    if ($noDuplicates) {
+        insertNewUser($databaseConnection);
+        header('Location: login.php', true, 303);
+        echo "<br><p>You have successfully registered in the database.</p>";
+    }
+}
 
 // Processing form data when form is submitted
 /*
@@ -156,7 +231,7 @@ function getError($input){
     }
 }
 */
-}
+#}
 else {
     //echo "<br><h3>Please enter your credentials below<h3>";
 }

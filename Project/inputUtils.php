@@ -1,21 +1,30 @@
 <?php
+
+// detects if a string contains a number of 
 function detectBadCharacters($input) {
-    $chars = str_split($input);
-    
-    foreach ($chars as $char) {
-        echo $char;
-        echo "<br>";
+    $badChars = ["<", ">", ";", "/", "{", "}", "[", "]", '"', "'"];
+    $badInput = false;
+    for ($i = 0; $i < strlen($input); $i++){
+        $currentLetter = substr($input, $i, 1);
+        if (in_array($currentLetter, $badChars)){
+            $badInput = true;
+            break;
+        }
     }
+    return $badInput;
 }
 
-function sanitise($input) {
-    $chars = str_split($input);
-    
-    foreach ($chars as $char) {
-        echo $char;
-        echo "<br>";
+function customSanitise($input) {
+    $badChars = ["<", ">", ";", "/", "{", "}", "[", "]", '"', "'"];
+    for ($i = 0; $i < strlen($input); $i++){
+        $currentLetter = substr($input, $i, 1);
+        if (in_array($currentLetter, $badChars)){
+            $input = str_replace($currentLetter, "&#0".strval(ord($currentLetter)), $input);
+        }
     }
+    return $input;
 }
+// verifies in constant time denoted by %wait that two strings are the same.
 function verifyPassword($sysPass, $userPass, $match = true, $iter = 0, $wait = 2.0) {
     try {
         if (strlen($userPass) != strlen($sysPass)) {

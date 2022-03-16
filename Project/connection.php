@@ -87,9 +87,12 @@ try {
     $databaseConnection = new PDO("mysql:host=".HOST.";dbname=".DATABASE.";charset=UTF8", SADUSERNAME, SADPASSWORD);
     $databaseConnection->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
     $databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $databaseConnection->setAttribute(PDO::ATTR_PERSISTENT, 'buff');
     $testDB = "SELECT * FROM " . DATABASE . "." . TABLE;
     $statement = $databaseConnection->prepare($testDB);
-    $databaseConnection->exec($testDB);
+    $databaseConnection->query($testDB);
+    $selected = $statement->fetchAll();
+
     echo "<br>Database already set up.\n";
 }
 catch (PDOException $e){

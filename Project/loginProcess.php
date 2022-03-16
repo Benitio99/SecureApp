@@ -1,10 +1,14 @@
 <?php
 
-require ("server.php");
-require ("inputUtils.php");
+include_once("server.php");
+include_once("inputUtils.php");
 
-$_SESSION["loggedIn"] = False;
-$_SESSION["admin"] = False;
+if (!isset($_SESSION["loggedIn"])) {
+    $_SESSION["loggedIn"] = False;
+}
+if (!isset($_SESSION["isAdmin"])) {
+    $_SESSION["isAdmin"] = False;
+}
 
 function checkUserExists($databaseConnection, $username){
     //$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -16,14 +20,14 @@ function checkUserExists($databaseConnection, $username){
         ];
 
         $statement->bindValue(':username', $username);
-        $result = $statement->query();
-        $id = $statement->fetchAll();
-        if ($id) {
-            echo "<br><p>User Exists!</p>";
+        $statement->execute();
+        $number = $statement->rowCount();
+        if ($number == 1) {
+            //echo "<br><p>User Exists!</p>";
             return True;
         }
         else {
-            echo "<br><p>User does not Exist!</p>";
+            //echo "<br><p>User does not Exist!</p>";
             return False;
         }
     } catch(PDOException $e){
@@ -41,31 +45,26 @@ function checkUsersPassword($databaseConnection, $username, $password){
 
         $sql = "SELECT userId, username, firstName, surname, AES_DECRYPT(password, '" . AESKEY . "') as decryptedPassword FROM " . TABLE . " WHERE username = :username AND AES_DECRYPT(password, '" . AESKEY . "') = '" . $password . "'";
         
-        //echo "\n:: " . $sql . "\n";
-        
         $statement = $databaseConnection->prepare($sql);
-        /*$data = [
-            $username = $unsanitisedUsername,
-        ];
-*/
+
         $statement->bindValue(':username', $username);
-        $statement->query();
+        $statement->execute();
         $result = $statement->fetchAll();
-        echo '<pre>'; print_r($result); echo '</pre>';
-        if (!$result) {
-            echo "<p>1Username : '" . $username . "' and password: '" . $password . "' combination is incorrect</p>";
+        if (!$result || count($result) > 1) {
+            //echo "<p>1Username : '" . $username . "' and password: '" . $password . "' combination is incorrect</p>";
             return false;
         }
         else {
-            echo "<br><h1>" . verifyPassword($password, $result["decryptedPassword"]);
-            if (verifyPassword($password, $result["decryptedPassword"]) == 1) {
-                $_SESSION["loggedInUserID"] = $result["userId"];
-                $_SESSION["loggedInUserUsername"] = $result["username"];
-                $_SESSION["loggedInUserFirstName"] = $result["firstName"];
-                $_SESSION["loggedInUserSurname"] = $result["surname"];
+            if (verifyPassword($password, $result[0]["decryptedPassword"]) == 1) {
+                $_SESSION["loggedInUserID"] = $result[0]["userId"];
+                $_SESSION["loggedInUserUsername"] = $result[0]["username"];
+                $_SESSION["loggedInUserFirstName"] = $result[0]["firstName"];
+                $_SESSION["loggedInUserSurname"] = $result[0]["surname"];
+                //var_dump($result);
+                return true;
             }
             else {
-                echo "<h3>2Username submited: " . $username . " and password: " . $password . " combination is incorrect</h3>";
+                //echo "<h3>2Username submited: " . $username . " and password: " . $password . " combination is incorrect</h3>";
                 return false;            
             }
         }
@@ -82,29 +81,27 @@ function checkUserIsAdmin($databaseConnection, $adminUsername){
     try{
         $sql = "SELECT 'isAdmin' FROM " . TABLE . " WHERE username = :username";
         $statement = $databaseConnection->prepare($sql);
-        $data = [
-            $username = $adminUsername,
-        ];
-
-        $statement->bindValue(':username', $username);
-        $statement->query();
+        
+        $statement->bindValue(':username', $adminUsername);
+        $statement->execute();
         $result = $statement->fetchAll();
+        var_dump($result);
+        //wait(10);
         if (!$result) {
-            echo "<h3>User does not exist";
+            //echo "<h3>User does not exist</h3>";
             return false;
         }
         else {
-            if ($result["isAdmin"] == 1) {
+            if ($result[0]["isAdmin"] == True) {
                 return true;
             }
             else {
-                echo "<h3>User is not an administrator";
                 return false;            
             }
         }
     } catch(PDOException $e){
         die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
-        return False;
+        return false;
     }
     // Close statement
     unset($statement);
@@ -112,118 +109,41 @@ function checkUserIsAdmin($databaseConnection, $adminUsername){
     unset($databaseConnection);
 }
 function processLogin($databaseConnection) {
-        // Check if data is entered
+    // Check if data is entered
     if (!isset($_GET['username'], $_GET['password'])) {
-        exit('Please complete the registration form!');
-        echo "<p>form not filled</p>";
+        echo('Please complete the registration form!');
     }
     else {
-        //Form is filled in
         $unsanitisedUsername = $_GET['username'];
-        echo "<brUusername: " . $unsanitisedUsername;
         $unsanitisedPassword = $_GET['password'];
-        echo "\tPassword: " . $unsanitisedPassword;
-        if (checkUserExists($databaseConnection, $unsanitisedUsername)){
-            if (checkUsersPassword($databaseConnection, $unsanitisedUsername, $unsanitisedPassword)) {
-                $_SESSION["loggedIn"] = True;
-                if (checkUserIsAdmin($databaseConnection, )) {
-                    $_SESSION["admin"] = True;
+        $sanitisedUsername = customSanitise($unsanitisedUsername);
+        $sanitisedPassword = customSanitise($unsanitisedPassword);
+        if (detectBadCharacters($unsanitisedUsername) || detectBadCharacters($unsanitisedPassword)) {
+            echo "<br><p>Username: " . $sanitisedUsername . " and password: " . $sanitisedPassword . ", combination is incorrect.</p>";
+        }
+        elseif (checkUserExists($databaseConnection, $sanitisedUsername)){
+            if (checkUsersPassword($databaseConnection, $sanitisedUsername, $sanitisedPassword)) {
+                $_SESSION["loggedIn"] = true;
+                //echo "logged in: " . $_SESSION["loggedIn"];
+                if (checkUserIsAdmin($databaseConnection, $sanitisedUsername)) {
+                    $_SESSION["isAdmin"] = true;
                 }
                 else {
-                    $_SESSION["admin"] = False;
+                    $_SESSION["isAdmin"] = false;
                 }
-                echo "<p> redirecting to main page...</p>";
-                header('Location: main.php', True, 301);
+                //var_dump($_SESSION);
+                $_SESSION['loginStartTime'] = time();
+
+                header('Location: main.php', true, 303);
+                exit;
             }
             else {
+                echo "<br><p>Username: " . $sanitisedUsername . " and password: " . $sanitisedPassword . ", combination is incorrect.</p>";
             }
         }
     }
 }
-if (isset($_GET["submit"])) {
+if (isset($_GET["submit"])) {  
     processLogin($databaseConnection);
 }
-function checkPasswordAgainstUser($databaseConnection) {
-    $$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-        //echo "form filled";
-        /* Attempt MySQL server connection. Assuming you are running MySQL
-        server with default setting (user 'root' with no password) */
-        /*try{
-            echo "creating pdo";
-            $pdo = new PDO('mysql:host = "' . HOST . '";dbname = "' . DATABASE . ';', SADUSER, SADPASSWORD);
-            // Set the PDO error mode to exception
-        } catch(PDOException $e){
-            die("ERROR: Could not connect. " . $e->getMessage());
-        }
-        */
-        // Attempt insert query execution
-        try{
-            do {
-                $randomNumber = mt_rand(0, 9999999999);
-                $randomCheckSql = "SELECT 1 FROM " . TABLE . " WHERE userId = $randomNumber";
-                $statement = $connection->prepare($randomCheckSql);
-                $statement->execute();
-                $id = $statement->fetchColumn();
-                //$query_object = mysqli_query($db_connection, "SELECT 1 FROM " . TABLE . " WHERE userId = $random_number");
-                //$query_record = mysqli_fetch_array($query_object);
-                //if(! $query_record) {
-                  //  break;
-                //}
-                if(!$id) {
-                    break;
-                }
-            } while(true);
-            //echo "<br>Constructing Statement\n";
-            // Prepare an insert statement
-            $sql = "INSERT INTO " . TABLE . "(userId, username, admin, firstName, surname, email, password) VALUES(:userId, :username, :admin, :firstName, :surname, :email, AES_ENCRYPT(:password, '" . AESKEY . "'))";
-            $statement = $connection->prepare($sql);
-            $data = [
-                $userId = $randomNumber,
-                $username = $_GET['username'],
-                $admin = false,
-                $firstName = $_GET['firstName'],
-                $surname = $_GET['surname'],
-                $email = $_GET['email'],
-                $password = $_GET['passwordOne']
-            ];
-
-            
-            
-            //$statement -> bindValue(":username", $username);
-            // Bind parameters to statement
-            
-            $statement->bindValue(':userId', $userId);
-            $statement->bindValue(':username', $username);
-            $statement->bindValue(':admin', $admin);
-            $statement->bindValue(':firstName', $firstName);
-            $statement->bindValue(':surname', $surname);
-            $statement->bindValue(':email', $email);
-            $statement->bindValue(':password', $password);
-            
-            /* Set the parameters values and execute
-            the statement again to insert another row */
-            /*$username = "";
-            $firstName = "John";
-            $surname = "Smith";
-            $email = "jsmith@email.com";
-            $password = "";
-            */
-            $inserted = $statement->execute();
-            
-        } catch(PDOException $e){
-            die("ERROR: Could not prepare/execute query: $sql. " . $e->getMessage());
-        }
-        if ($inserted) {
-            //echo "<br><h1>Records inserted successfully.<h1>";
-        }
-        
-        // Close statement
-        unset($statement);
-        
-        // Close connection
-        unset($connection);
-    }
-#}
-
 ?>

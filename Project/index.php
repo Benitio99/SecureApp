@@ -1,7 +1,6 @@
 <?php
-  require_once 'header.php';
-  include("server.php");
-  
+  include_once('header.php');
+  include_once("server.php");
 
 ?>
 <!DOCTYPE html>
@@ -34,10 +33,8 @@
     <main id = "mainArea">
       <div>
         <h3>Would you like to Login or Register?</h3>
-        <div class="buttons">
-          <input type = "button" value = "login" name = "login"><a href="login.php" title="Login">Login</a></input>
-          <input type = "button" value = "register" name = "register"><a href="Register.php" title="Register">Register</a></input>
-        </div> 
+        <a href="login.php" title="Login">Login</a>
+        <a href="register.php" title="Register">Register</a>
       </div>
     </main>
   </body>
